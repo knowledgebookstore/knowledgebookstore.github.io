@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Catalog with Modal Recommendations</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #653aa4;
+            --accent-color: #653aa4;
+            --bg-color: #f4f3ef;
+            --card-bg: #ffffff;
+        }
+
+        /* Ensure padding and borders don't add to element widths */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            margin: 0;
+            padding: 1rem; /* Reduced padding for smaller screens */
+        }
+
+        @media (min-width: 768px) {
+            body {
+                padding: 2rem;
+            }
+        }
+
+        h1 {
+            font-family: 'Helvetica Neue', sans-serif;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+        }
+
+        @media (min-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+
+        /* Catalog Grid Layout */
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 768px) {
+            .catalog-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 20px;
+            }
+        }
+
+        .book-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .book-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.1);
+        }
+
+        .book-card img {
+            width: 100%;
+            max-width: 120px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .book-card h3 {
+            font-size: 0.95rem;
+            margin: 5px 0;
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+
+        .book-card p {
+            font-size: 0.8rem;
+            color: #666;
+            margin: 0;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            padding: 10px; /* Prevents modal from sticking directly to screen edges on mobile */
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .modal-content {
+                padding: 30px;
+            }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: var(--primary-color);
+        }
+
+        .modal-body-flex {
+            display: flex;
+            flex-direction: column; /* Stack image and text vertically on mobile */
+            gap: 20px;
+        }
+
+        @media (min-width: 600px) {
+            .modal-body-flex {
+                flex-direction: row; /* Switch back to side-by-side on wider screens */
+            }
+        }
+
+        .modal-body-flex img {
+            width: 120px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin: 0 auto; /* Center image on mobile */
+        }
+
+        @media (min-width: 600px) {
+            .modal-body-flex img {
+                width: 140px;
+                height: 210px;
+                margin: 0;
+            }
+        }
+
+        .modal-details {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            min-width: 0; /* Prevents text flex items from overflowing layout bounds */
+        }
+
+        .modal-title {
+            font-family: 'Helvetica Neue', sans-serif;
+            font-size: 1.2rem;
+            margin: 0 0 5px 0;
+        }
+
+        @media (min-width: 768px) {
+            .modal-title {
+                font-size: 1.4rem;
+            }
+        }
+
+        .modal-author {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0 0 10px 0;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .tag {
+            background: var(--bg-color);
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            color: var(--accent-color);
+            font-weight: 500;
+        }
+
+        .modal-description {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #444;
+            margin: 0 0 15px 0;
+        }
+
+        /* Recommended Reads Section Styles */
+        .recommended-section {
+            margin-top: 1rem;
+            border-top: 1px solid #eeeeee;
+            padding-top: 1rem;
+        }
+
+        .recommended-section h3 {
+            font-size: 0.95rem;
+            font-family: 'Helvetica Neue', sans-serif;
+            color: var(--primary-color);
+            margin-bottom: 0.8rem;
+        }
+
+        #modalRecommendations {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .rec-item {
+            cursor: pointer;
+            background: #f9f8f6;
+            padding: 8px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .rec-item:hover {
+            background: #f0ebe1;
+        }
+
+        .rec-item img {
+            width: 45px;
+            height: 65px;
+            object-fit: cover;
+            border-radius: 2px;
+            margin-bottom: 4px;
+        }
+
+        .rec-item span {
+            font-weight: 600;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            color: var(--primary-color);
+        }
+
+        .modal-footer {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: stretch;
+            margin-top: auto;
+            border-top: 1px solid #eeeeee;
+            padding-top: 10px;
+        }
+
+        @media (min-width: 480px) {
+            .modal-footer {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        .isbn-text {
+            font-size: 0.75rem;
+            color: #888;
+            text-align: center;
+        }
+
+        @media (min-width: 480px) {
+            .isbn-text {
+                text-align: left;
+            }
+        }
+
+        .btn-store {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .btn-store.disabled {
+            background-color: #ccc;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>In-store Catalogue: Main Room (Corner Shelf 2)</h1>
+    
+    <!-- Main Book Catalog Grid -->
+    <div id="catalogGrid" class="catalog-grid"></div>
+
+    <!-- Modal Structure -->
+    <div id="bookModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-btn" id="closeModalBtn">&times;</button>
+            
+            <div class="modal-body-flex">
+                <img id="modalImg" src="" alt="Book Cover">
+                
+                <div class="modal-details">
+                    <h2 id="modalTitle" class="modal-title"></h2>
+                    <p id="modalAuthor" class="modal-author"></p>
+                    <div class="tags-container" id="modalTags"></div>
+                    <p id="modalDescription" class="modal-description"></p>
+                    
+                    <!-- Recommended Reads Container -->
+                    <div class="recommended-section">
+                        <h3>Recommended Reads</h3>
+                        <div id="modalRecommendations"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <span id="modalIsbn" class="isbn-text"></span>
+                <a id="modalStoreBtn" href="#" target="_blank" class="btn-store">View in Store</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Book data is loaded from the external JSON file.
+        // Keep this HTML file and updated_back_wall_centre_output.json in the same folder.
+        let bookDataJSON = [];
+
+        const catalogGrid = document.getElementById('catalogGrid');
+        const bookModal = document.getElementById('bookModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+
+        const modalImg = document.getElementById('modalImg');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalAuthor = document.getElementById('modalAuthor');
+        const modalTags = document.getElementById('modalTags');
+        const modalDescription = document.getElementById('modalDescription');
+        const modalRecommendations = document.getElementById('modalRecommendations');
+        const modalIsbn = document.getElementById('modalIsbn');
+        const modalStoreBtn = document.getElementById('modalStoreBtn');
+
+        // Render Catalog Grid (Automatically skips/hides items without a title)
+        function renderCatalog() {
+            catalogGrid.innerHTML = '';
+            bookDataJSON.forEach(book => {
+                // Check if title is missing, null, or empty string, and skip it
+                if (!book.title || book.title.trim() === "") {
+                    return; 
+                }
+
+                const card = document.createElement('div');
+                card.className = 'book-card';
+                card.innerHTML = `
+                    <img src="${book.cover_art_url || 'https://via.placeholder.com/120x180?text=No+Cover'}" alt="${book.title}">
+                    <h3>${book.title}</h3>
+                    <p>${book.author || 'Unknown Author'}</p>
+                `;
+                card.addEventListener('click', () => openModal(book));
+                catalogGrid.appendChild(card);
+            });
+        }
+
+        // Open Modal with Book Data
+        function openModal(book) {
+            modalImg.src = book.cover_art_url || 'https://via.placeholder.com/120x180?text=No+Cover';
+            modalTitle.textContent = book.title;
+            modalAuthor.textContent = book.author ? `By ${book.author}` : '';
+            modalDescription.textContent = book.description || 'No description available for this book.';
+            modalIsbn.textContent = book.isbn ? `ISBN: ${book.isbn}` : '';
+
+            // Render Tags
+            modalTags.innerHTML = '';
+            if (book.knowledge_bookstore_tags && book.knowledge_bookstore_tags.length > 0) {
+                book.knowledge_bookstore_tags.forEach(tag => {
+                    const tagEl = document.createElement('span');
+                    tagEl.className = 'tag';
+                    tagEl.textContent = tag;
+                    modalTags.appendChild(tagEl);
+                });
+            }
+
+            // Render Store Button
+            if (book.knowledge_bookstore_url) {
+                modalStoreBtn.href = book.knowledge_bookstore_url;
+                modalStoreBtn.classList.remove('disabled');
+                modalStoreBtn.textContent = 'View in Store';
+            } else {
+                modalStoreBtn.href = '#';
+                modalStoreBtn.classList.add('disabled');
+                modalStoreBtn.textContent = 'Not Available Online';
+            }
+
+            // Render Recommendations (Picks 3 random valid books with titles, excluding current book)
+            renderRecommendations(book);
+
+            bookModal.classList.add('active');
+        }
+
+        // Render Recommendations Inside Modal
+        function renderRecommendations(currentBook) {
+            modalRecommendations.innerHTML = '';
+            
+            // Filter out items without titles and filter out the current book
+            const validBooks = bookDataJSON.filter(b => b.title && b.isbn !== currentBook.isbn);
+            
+            // Shuffle and pick 3 recommendations
+            const shuffled = [...validBooks].sort(() => 0.5 - Math.random());
+            const recs = shuffled.slice(0, 3);
+
+            recs.forEach(rec => {
+                const recItem = document.createElement('div');
+                recItem.className = 'rec-item';
+                recItem.innerHTML = `
+                    <img src="${rec.cover_art_url || 'https://via.placeholder.com/45x65?text=No+Cover'}" alt="${rec.title}">
+                    <span>${rec.title}</span>
+                `;
+                recItem.addEventListener('click', () => {
+                    openModal(rec);
+                });
+                modalRecommendations.appendChild(recItem);
+            });
+        }
+
+        // Close Modal Handlers
+        closeModalBtn.addEventListener('click', () => {
+            bookModal.classList.remove('active');
+        });
+
+        bookModal.addEventListener('click', (e) => {
+            if (e.target === bookModal) {
+                bookModal.classList.remove('active');
+            }
+        });
+
+        // Initial Load
+        async function loadBookData() {
+            try {
+                const response = await fetch('updated_back_wall_corner-shelf2_output.json', {
+                    cache: 'no-store'
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Failed to load book data (${response.status})`);
+                }
+
+                const data = await response.json();
+
+                if (!Array.isArray(data)) {
+                    throw new Error('Book data JSON must contain an array of books.');
+                }
+
+                bookDataJSON = data;
+                renderCatalog();
+            } catch (error) {
+                console.error('Unable to load book data:', error);
+                catalogGrid.innerHTML = `
+                    <p style="grid-column: 1 / -1; text-align: center; color: #666;">
+                        Unable to load the book catalog. Make sure
+                        <strong>updated_back_wall_centre_output.json</strong>
+                        is in the same folder as this HTML file and that the page is being served by a web server.
+                    </p>
+                `;
+            }
+        }
+
+        loadBookData();
+    </script>
+</body>
+</html>
