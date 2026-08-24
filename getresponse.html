@@ -25,54 +25,43 @@
             background-color: #f4f5f7;
             color: #333;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
         }
-        .container {
-            background-color: #ffffff;
+        .wrapper {
             width: 100%;
-            max-width: 420px;
-            padding: 40px 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            border-top: 6px solid #653aa4;
+            max-width: 600px; /* Gives it a clean, wider layout limit */
+            text-align: center;
         }
         h1 {
             color: #653aa4;
-            font-size: 24px;
+            font-size: 28px;
             margin-bottom: 10px;
-            text-align: center;
         }
         p {
-            font-size: 15px;
+            font-size: 16px;
             color: #666;
             margin-bottom: 25px;
-            text-align: center;
             line-height: 1.5;
         }
-        .form-container {
-            margin-bottom: 10px;
-        }
         .footer-note {
-            margin-top: 20px;
+            margin-top: 25px;
             font-size: 12px;
             color: #999;
-            text-align: center;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <div class="wrapper">
         <h1>Stay Updated</h1>
         <p>Join our community to get the latest updates, recommendations, and news straight to your inbox.</p>
         
         <!-- GetResponse Web Component Embed Tag -->
-        <div class="form-container">
-            <getresponse-form form-id="359bcb40-8f22-45bd-9bff-5263c6ed86b5" e="1"></getresponse-form>
-        </div>
+        <getresponse-form form-id="359bcb40-8f22-45bd-9bff-5263c6ed86b5" e="1"></getresponse-form>
 
         <div class="footer-note">
             We respect your privacy. Unsubscribe at any time.
