@@ -1,10 +1,178 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Website</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>In-store Catalogue & Newsletter Sign-up</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #653aa4;
+            --accent-color: #653aa4;
+            --bg-color: #f4f3ef;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            margin: 0;
+            padding: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            body {
+                padding: 2rem;
+            }
+        }
+
+        h1 {
+            font-family: 'Helvetica Neue', sans-serif;
+            text-align: center;
+            margin: 0 0 2rem;
+            font-size: 1.8rem;
+        }
+
+        @media (min-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .catalog-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 24px 20px;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--primary-color);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 180px;
+        }
+
+        .catalog-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.1);
+        }
+
+        .catalog-card .icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 8px;
+            background: var(--bg-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+
+        .catalog-card h2 {
+            font-family: 'Helvetica Neue', sans-serif;
+            font-size: 1.1rem;
+            margin: 5px 0;
+        }
+
+        .catalog-card p {
+            font-size: 0.8rem;
+            color: #666;
+            margin: 5px 0 0;
+            line-height: 1.4;
+        }
+
+        .footer {
+            max-width: 1000px;
+            margin: 2rem auto 0;
+            border-top: 1px solid #eeeeee;
+            padding-top: 1rem;
+            text-align: center;
+            color: #888;
+            font-size: 0.75rem;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Hello, World!</h1>
-    <p>My website is live.</p>
+    <h1>In-store Catalogue</h1>
+
+    <div class="catalog-grid">
+        <a class="catalog-card" href="back_wall_centre.html">
+            <div class="icon">✊🏿🙏🏿</div>
+            <h2>Main Room — Centre Wall</h2>
+            <p>Browse the books on the centre wall of the main room.</p>
+        </a>
+
+        <a class="catalog-card" href="back_wall_left.html">
+            <div class="icon">✊🏿🧠</div>
+            <h2>Main Room — Left Wall</h2>
+            <p>Browse the books on the left wall of the main room.</p>
+        </a>
+
+        <a class="catalog-card" href="back_wall_centre_display.html">
+            <div class="icon">📖</div>
+            <h2>Main Room — Display Shelf</h2>
+            <p>Browse the books on the main room display shelf.</p>
+        </a>
+
+        <a class="catalog-card" href="back_wall_corner-shelf.html">
+            <div class="icon">✊🏿🧠</div>
+            <h2>Main Room — Corner Shelf 2</h2>
+            <p>Browse the books on the main room corner shelf.</p>
+        </a>
+
+        <a class="catalog-card" href="back_wall_corner-shelf2.html">
+            <div class="icon">📖❤️</div>
+            <h2>Main Room — Corner Shelf</h2>
+            <p>Browse the books on the second main room corner shelf.</p>
+        </a>
+
+        <a class="catalog-card" href="centre_wall.html">
+            <div class="icon">📖</div>
+            <h2>Main Room — Central Pillar</h2>
+            <p>Browse the books on the centre wall.</p>
+        </a>
+
+        <a class="catalog-card" href="front_wall_right.html">
+            <div class="icon">🦸🏿</div>
+            <h2>Front of House — Right Wall</h2>
+            <p>Browse the books on the front right wall.</p>
+        </a>
+
+        <a class="catalog-card" href="childrens_corner.html">
+            <div class="icon">👶🏿</div>
+            <h2>Children's Corner</h2>
+            <p>Browse the books in the children's corner.</p>
+        </a>
+
+        <a class="catalog-card" href="getresponse.html">
+            <div class="icon">🗞️</div>
+            <h2>Sign-up For Our Newsletter</h2>
+            <p>Click to open the signup sheet.</p>
+        </a>
+    </div>
+
+    <div class="footer">
+        Select a catalogue section above to browse its books, or to sign up for our newsletter.
+    </div>
 </body>
 </html>
