@@ -4,9 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Subscribe to Our Newsletter</title>
-    
-    <!-- GetResponse Script Loader in Head -->
-    <script type="text/javascript" src="https://app.getresponse.com/view_form_web-component.js?id=359bcb40-8f22-45bd-9bff-5263c6ed86b5&amp;iced=0" async></script>
+
+    <!-- GetResponse Analytics / WebConnect -->
+    <script type="text/javascript">
+        (function(m, o, n, t, e, r, _){
+            m['__GetResponseAnalyticsObject'] = e;m[e] = m[e] || function() {(m[e].q = m[e].q || []).push(arguments)};
+            r = o.createElement(n);_ = o.getElementsByTagName(n)[0];r.async = 1;r.src = t;r.setAttribute('crossorigin', 'use-credentials');_.parentNode.insertBefore(r, _);
+        })(window, document, 'script', 'https://an.gr-wcon.com/script/4d19f39d-3475-4630-8959-7a01bbaf3c7e/ga.js', 'GrTracking');
+    </script>
+    <!-- End GetResponse Analytics -->
 
     <style>
         * {
@@ -46,6 +52,9 @@
             text-align: center;
             line-height: 1.5;
         }
+        .form-container {
+            margin-bottom: 10px;
+        }
         .footer-note {
             margin-top: 20px;
             font-size: 12px;
@@ -60,13 +69,18 @@
         <h1>Stay Updated</h1>
         <p>Join our community to get the latest updates, recommendations, and news straight to your inbox.</p>
         
-        <!-- GetResponse Embed Form Tag -->
-        <getresponse-form form-id="359bcb40-8f22-45bd-9bff-5263c6ed86b5" e="1"></getresponse-form>
+        <!-- GetResponse Web Component Embed Tag -->
+        <div class="form-container">
+            <getresponse-form form-id="359bcb40-8f22-45bd-9bff-5263c6ed86b5" e="1"></getresponse-form>
+        </div>
 
         <div class="footer-note">
             We respect your privacy. Unsubscribe at any time.
         </div>
     </div>
+
+    <!-- GetResponse Web Component Script Loader -->
+    <script type="text/javascript" src="https://app.getresponse.com/view_form_web-component.js?id=359bcb40-8f22-45bd-9bff-5263c6ed86b5&amp;iced=0"></script>
 
 </body>
 </html>
